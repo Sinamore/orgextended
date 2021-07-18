@@ -187,7 +187,7 @@ def get_check_char(view, check_state):
     if check_state == CheckState.Unchecked:
         return ' '
     elif check_state == CheckState.Checked:
-        return 'x'
+        return 'X'
     elif check_state == CheckState.Indeterminate:
         return '-'
     else:
