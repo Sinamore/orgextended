@@ -180,12 +180,12 @@ contexts:
       scope: orgmode.checkbox.checked
       captures:
         1: string
-        2: keyword orgmode.checkbox.checked 
+        2: orgmode.checkbox.checked.char
     - match: (\[([\-])\])\s?
       scope: orgmode.checkbox.blocked
       captures:
         1: string
-        2: constant.other orgmode.checkbox.blocked
+        2: orgmode.checkbox.blocked.char
       # [#/#] Checkbox summary
     - match: (\[\d*[/%]\d*\])
       scope: string orgmode.checkbox.summary

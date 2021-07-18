@@ -304,11 +304,11 @@
 			"foreground": "#c9be7b",
 		},
 		{
-			"scope": "orgmode.checkbox.checked",
+			"scope": "orgmode.checkbox.checked.char",
 			"foreground": "#00FF00",
 		},
 		{
-			"scope": "orgmode.checkbox.blocked",
+			"scope": "orgmode.checkbox.blocked.char",
 			"foreground": "#FF0000",
 		},
 		{
