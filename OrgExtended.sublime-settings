@@ -332,6 +332,9 @@
     //
     // Copy tasks in a TODO state from the previous day to a new day page.
     //"dayPageCopyOpenTasks": true,
+
+    "dayPageCreateOldPages": true,
+
     // ============================================================
     // Source Block Handler Paths
     // We do not automatically locate these at the moment.
