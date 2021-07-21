@@ -335,6 +335,8 @@
 
     "dayPageCreateOldPages": true,
 
+    "dayPageCreatePagesInFuture": true,
+
     // ============================================================
     // Source Block Handler Paths
     // We do not automatically locate these at the moment.
