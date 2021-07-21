@@ -280,6 +280,9 @@ class OrgDayPageNextCommand(sublime_plugin.TextCommand):
                 dayPageCreateOrOpen(dt)
                 break
             else:
+                if(sets.Get("dayPageCreatePagesInFuture",False)):
+                    dayPageCreateOrOpen(dt)
+                    break
                 fn = dayPageGetName(dt)
                 log.error(" Create day page in the future? " + fn)
                 break
