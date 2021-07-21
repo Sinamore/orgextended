@@ -91,7 +91,7 @@ def OnLoaded(view,dt):
         , "ORG_LINENUM":       str(view.curRow())
         , "ORG_FILENAME":      dayPageGetDateString(dt)
         , "ORG_AUTHOR":        getpass.getuser()
-        , "ORG_DATE_DMYA":     dt.date().today().strftime("%d.%m.%Y %A")
+        , "ORG_DATE_DMYA":     dt.date().strftime("%d.%m.%Y %A")
         })
     view.settings().set('auto_indent',ai)
 
