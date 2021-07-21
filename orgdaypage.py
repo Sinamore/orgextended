@@ -265,6 +265,9 @@ class OrgDayPageNextCommand(sublime_plugin.TextCommand):
         for i in range(maxScan):
             dt = dt + datetime.timedelta(days=1)
             if(dt.date() < self.now.date()):
+                if(sets.Get("dayPageCreateOldPages",False)):
+                    dayPageCreateOrOpen(dt)
+                    break
                 fn = dayPageGetName(dt)
                 if(os.path.exists(fn)):
                     tview = sublime.active_window().open_file(fn, sublime.ENCODED_POSITION)
