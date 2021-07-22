@@ -28,9 +28,10 @@ def CreateUniqueViewNamed(name, mapped=None):
 class DateView:
 	def __init__(self, dayhighlight=None,firstDayIndex=0, timeView=False):
 		self.months = []
-		self.columnsPerMonth = 30                     # 7 * 3 = 21 + 9
+		self.hor_space       = sets.Get("dateViewHorSpace",9)
 		self.columnsInDay    = 2  
 		self.columnsPerDay   = self.columnsInDay + 1  # 2 digits plus a space
+		self.columnsPerMonth = self.columnsPerDay * 7 + self.hor_space
 		self.midmonth        = datetime.datetime.now().month 
 		self.monthdata       = None
 		self.headingLines    = 2
@@ -241,7 +242,8 @@ class DateView:
 				ml1 = m1[i] if i < len(m1) else ""
 				ml2 = m2[i] if i < len(m2) else ""
 				ml3 = m3[i] if i < len(m3) else ""
-				line = "{0:30}{1:30}{2:30}".format(ml1,ml2,ml3)
+			    line = "{0:{w1}}{1:{w1}}{2:{w2}}".format(ml1,ml2,ml3,w1=self.columnsPerMonth,w2=self.columnsPerMonth-self.hor_space)
+
 			if(clock and self.timeView):
 				line += clock.get_row(i+2)	
 			lreg = self.output.line(pt)
