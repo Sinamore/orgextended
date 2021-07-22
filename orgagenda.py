@@ -2053,3 +2053,43 @@ class OrgAgendaGotoPrevDayCommand(sublime_plugin.TextCommand):
         agenda.UpdateNow(now)
         agenda.Clear(edit)
         agenda.DoRenderView(edit)
+
+# ================================================================================
+class OrgAgendaGotoNextWeekCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        agenda = FindMappedView(self.view)
+        now = agenda.now
+        now = now + datetime.timedelta(days=7)
+        agenda.UpdateNow(now)
+        agenda.Clear(edit)
+        agenda.DoRenderView(edit)
+
+# ================================================================================
+class OrgAgendaGotoPrevWeekCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        agenda = FindMappedView(self.view)
+        now = agenda.now
+        now = now + datetime.timedelta(days=-7)
+        agenda.UpdateNow(now)
+        agenda.Clear(edit)
+        agenda.DoRenderView(edit)
+
+# ================================================================================
+class OrgAgendaGotoNextMonthCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        agenda = FindMappedView(self.view)
+        now = agenda.now
+        now = now + drel.relativedelta(months=+1)
+        agenda.UpdateNow(now)
+        agenda.Clear(edit)
+        agenda.DoRenderView(edit)
+
+# ================================================================================
+class OrgAgendaGotoPrevMonthCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        agenda = FindMappedView(self.view)
+        now = agenda.now
+        now = now + drel.relativedelta(months=-1)
+        agenda.UpdateNow(now)
+        agenda.Clear(edit)
+        agenda.DoRenderView(edit)

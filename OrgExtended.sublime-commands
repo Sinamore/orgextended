@@ -123,6 +123,10 @@
     {"caption": "Org Agenda Choose View",      "command": "org_agenda_choose_custom_view"},
     {"caption": "Org Agenda Goto Next Day",    "command": "org_agenda_goto_next_day"    },
     {"caption": "Org Agenda Goto Prev Day",    "command": "org_agenda_goto_prev_day"    },
+    {"caption": "Org Agenda Goto Next Week",   "command": "org_agenda_goto_next_week"   },
+    {"caption": "Org Agenda Goto Prev Week",   "command": "org_agenda_goto_prev_week"   },
+    {"caption": "Org Agenda Goto Next Month",  "command": "org_agenda_goto_next_month"  },
+    {"caption": "Org Agenda Goto Prev Month",  "command": "org_agenda_goto_prev_month"  },
 
     // Date Picker
     {"caption": "Org Date Picker",             "command": "org_date_picker"             },
