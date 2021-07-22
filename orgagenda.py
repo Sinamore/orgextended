@@ -1791,6 +1791,14 @@ class OrgAgendaGoToCommand(sublime_plugin.TextCommand):
 
                 # Needs checks on agenda.now to be consistent with
                 # OrgDayPagePreviousCommand and OrgDayPageNextCommand
+                agenda_date = agenda.now.date()
+                current_date = datetime.datetime.now().date()
+                if (agenda_date < current_date and not sets.Get("dayPageCreateOldPages", False)) or \
+                   (agenda_date > current_date and not sets.Get("dayPageCreatePagesInFuture", False)):
+                    log.warning("Day page does not exist: " +
+                                daypage.dayPageGetName(agenda_date))
+                    return
+
                 daypage.dayPageCreateOrOpen(agenda.now)
 
 
