@@ -223,6 +223,9 @@
         "Flags":   ["Todos : tagfilter |TAG1 |OTHERTAGS", "Todos : tagfilter OTHERTAGS"],
     },
 
+    // Set horizontal spacing between months in DateView
+    "dateViewHorSpace": 7,
+
     // By default our first day of the week is Sunday
     // But some people prefer the first day to be monday
     // Set first day to Monday
