@@ -19,6 +19,7 @@ import OrgExtended.orgdatepicker as dpick
 import OrgExtended.asettings as sets
 import OrgExtended.pymitter as evt
 import OrgExtended.orginsertselected as insSel
+import OrgExtended.orgdaypage as daypage
 import calendar
 
 import dateutil.rrule as dr
@@ -1785,7 +1786,13 @@ class OrgAgendaGoToCommand(sublime_plugin.TextCommand):
                     path = "{0}:{1}".format(f.filename,n.start_row + 1)
                     self.view.window().open_file(path, sublime.ENCODED_POSITION)
             else:
-                log.warning("COULD NOT LOCATE AGENDA ROW")
+                # If nothing else is selected, open daypage of selected day
+                log.warning("Agenda row not located, OrgAgendaGoToCommand opens daypage")
+
+                # Needs checks on agenda.now to be consistent with
+                # OrgDayPagePreviousCommand and OrgDayPageNextCommand
+                daypage.dayPageCreateOrOpen(agenda.now)
+
 
 # ================================================================================
 class RunEditingCommandOnNode:
