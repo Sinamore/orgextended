@@ -231,6 +231,8 @@
     // Set first day to Monday
     "firstDayOfWeek": "Monday",
 
+    "weekViewDayNames": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+
     // Configure the agenda header format
     //"agendaHeaderFormat": "%A \t%d %B %Y",
 
