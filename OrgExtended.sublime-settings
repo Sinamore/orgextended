@@ -254,6 +254,7 @@
     // set num days to 5 and the firstDayOfWeek above
     // to Monday
     "agendaWeekViewNumDays": 7,
+    "agendaWeekViewAdaptive": true,
 
     // Do you want todo views to pop up the filter box when they pop up or
     // only after you ask for it. This is an input panel at the bottom of the view
