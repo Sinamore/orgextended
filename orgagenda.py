@@ -1121,7 +1121,11 @@ class WeekView(AgendaBaseView):
         self.InsertTimeHeading(edit,self.now.hour)
         #print(str(self.now))
         wday   = self.now.weekday()
-        firstDayIndex = sets.GetWeekdayIndexByName(sets.Get("firstDayOfWeek", "Sunday"))
+        if sets.Get("agendaWeekViewAdaptive", False):
+            # Adaptive first day -- week is shown starting from yesterday
+            firstDayIndex = ((wday - 1) + 7) % 7
+        else:
+            firstDayIndex = sets.GetWeekdayIndexByName(sets.Get("firstDayOfWeek", "Sunday"))
         wstart = self.now + datetime.timedelta(days=firstDayIndex-wday)
         dayNames  = sets.Get("weekViewDayNames",["Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"])
         numDays   = sets.Get("agendaWeekViewNumDays",7)
