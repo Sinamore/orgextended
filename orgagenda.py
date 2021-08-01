@@ -2,7 +2,7 @@ import re
 import os
 import time
 import sublime, sublime_plugin
-import datetime
+import datetime as dt
 import fnmatch
 import OrgExtended.orgparse.node as node
 import OrgExtended.orgparse.date as orgdate
@@ -41,15 +41,15 @@ def ReloadAllUnsavedBuffers():
             db.Get().FindInfo(view)
 
 def IsRawDate(ts):
-    return isinstance(ts,datetime.date) or isinstance(ts,datetime.datetime)
+    return isinstance(ts,dt.date) or isinstance(ts,dt.datetime)
 
 def EnsureDateTime(ts):
-    if(ts and not isinstance(ts,datetime.datetime)):
-        return datetime.datetime.combine(ts, datetime.datetime.min.time())
+    if(ts and not isinstance(ts,dt.datetime)):
+        return dt.datetime.combine(ts, dt.datetime.min.time())
     return ts
 
 def EnsureDate(ts):
-    if(isinstance(ts,datetime.datetime)):
+    if(isinstance(ts,dt.datetime)):
         return ts.date()
     return ts
 
@@ -194,9 +194,9 @@ def IsProject(n):
     return IsProjectTodoWithTodos(n)
 
 def IsTodaysDate(check, today):
-    if(not type(check) == datetime.date):
+    if(not type(check) == dt.date):
         check = check.date()
-    if(not type(today) == datetime.date):
+    if(not type(today) == dt.date):
         today = today.date()
     return today == check
 
@@ -204,13 +204,11 @@ def IsInMonthCheck(t, now):
     if(IsRawDate(t)):
         dateT = t
     else:
-        dateT = datetime.date(t.start.year, t.start.month, t.start.day)
+        dateT = dt.date(t.start.year, t.start.month, t.start.day)
 
     if (dateT.year == now.year):
-        if (dateT.month >= (now.month-1) and dateT.month <= (now.month+1)):
-            return True
-        else:
-            return False
+        return dateT.month >= (now.month - 1) and dateT.month <= (now.month + 1)
+
     if (dateT.year == now.year + 1) and (dateT.month == 0 and now.month == 11):
         return True
     if (dateT.year == now.year - 1) and (dateT.month == 11 and now.month == 0):
@@ -288,26 +286,26 @@ def IsAllDay(n,today):
     timestamps = n.get_timestamps(active=True,point=True,range=True)
     for t in timestamps:
         if(t.repeating):
-            dt = t.next_repeat_from(today)
-            if(dt.hour == 0 and dt.minute == 0 and dt.second == 0 and dt.microsecond == 0):
-                return dt
+            nextT = t.next_repeat_from(today)
+            if(nextT.hour == 0 and nextT.minute == 0 and nextT.second == 0 and nextT.microsecond == 0):
+                return nextT
         else:
             if(t.has_end() or t.has_time()):
                 continue
             return t
     if(n.scheduled):
         if(n.scheduled.repeating):
-            dt = n.scheduled.next_repeat_from(today)
-            if(dt.hour == 0 and dt.minute == 0 and dt.second == 0 and dt.microsecond == 0):
+            nextT = n.scheduled.next_repeat_from(today)
+            if(nextT.hour == 0 and nextT.minute == 0 and nextT.second == 0 and nextT.microsecond == 0):
                 return n.scheduled
         else:
             if(not n.scheduled.has_end() and not n.scheduled.has_time()):
                 return n.scheduled
     if(n.deadline):
-        dt = n.deadline.deadline_start
-        if(isinstance(dt,datetime.date)):
+        nextT = n.deadline.deadline_start
+        if(isinstance(nextT,dt.date)):
             return True
-        if(dt.hour == 0 and dt.minute == 0 and dt.second == 0 and dt.microsecond == 0):
+        if(nextT.hour == 0 and nextT.minute == 0 and nextT.second == 0 and nextT.microsecond == 0):
             return today
     return None
 
@@ -320,7 +318,7 @@ def HasTimestamp(n):
 def IsInHourBracket(s, e, hour):
     if(not e):
         # TODO Make this configurable
-        e = s + datetime.timedelta(minutes=30)
+        e = s + dt.timedelta(minutes=30)
     # Either this task is a ranged task OR it is a single point task
     # Ranged tasks have to fit within the hour, point tasks have to 
     if( Overlaps(s.hour*60 + s.minute, e.hour*60 + e.minute, hour*60, hour*60 + 59)):
@@ -384,7 +382,7 @@ def Overlaps(s,e,rs,re):
 def IsInHourAndMinuteBracket(s,e,hour,mstart,mend):
     if(not e):
         # TODO Make this configurable
-        e = s + datetime.timedelta(minutes=30)
+        e = s + dt.timedelta(minutes=30)
 
     # Either this task is a ranged task OR it is a single point task
     # Ranged tasks have to fit within the hour, point tasks have to 
@@ -633,7 +631,7 @@ class AgendaBaseView:
             if operator == "<":
                 self._endDoneDateComparator = lambda d, date=date: d is not None and d < date
             if operator == "<=":
-                date = date + datetime.timedelta(days=1)
+                date = date + dt.timedelta(days=1)
                 self._endDoneDateComparator = lambda d, date=date: d is not None and d < date
 
     def MatchHas(self, node):
@@ -773,7 +771,7 @@ class AgendaBaseView:
 
     def UpdateNow(self, now=None):
         if(now == None):
-            self.now = datetime.datetime.now()
+            self.now = dt.datetime.now()
         else:
             self.now = now
             self.entries = []
@@ -860,7 +858,7 @@ class AgendaBaseView:
 def IsBeforeNow(ts, now):
     if(isinstance(ts,orgdate.OrgDate)):
         return ts and (not ts.has_time() or ts.start.time() < now.time())
-    elif(ts and isinstance(ts,datetime.datetime)):
+    elif(ts and isinstance(ts,dt.datetime)):
         return ts.time() < now.time()
     else:
         return False
@@ -868,7 +866,7 @@ def IsBeforeNow(ts, now):
 def IsAfterNow(ts, now):
     if(isinstance(ts,orgdate.OrgDate)):
         return ts and ts.has_time() and ts.start.time() >= now.time()
-    elif(ts and isinstance(ts,datetime.datetime)):
+    elif(ts and isinstance(ts,dt.datetime)):
         return ts.time() >= now.time()
     else:
         return False
@@ -882,7 +880,7 @@ class CalendarView(AgendaBaseView):
 
     def UpdateNow(self, now=None):
         if(now == None):
-            self.now = datetime.datetime.now()
+            self.now = dt.datetime.now()
         else:
             self.now = now
             self.dv.MoveCDateToDate(self.now)
@@ -923,13 +921,13 @@ def bystartdatekey(a):
 
 def bystartnodedatekey(a):
     n = a['node']
-    dt = a['ts']
+    t = a['ts']
     #dt = n.scheduled.start
-    if(isinstance(dt,orgdate.OrgDate)):
-        dt=dt.start
-    if(isinstance(dt, datetime.date)):
-        return datetime.datetime.combine(dt.today(), datetime.datetime.min.time())
-    return dt
+    if(isinstance(t,orgdate.OrgDate)):
+        t=t.start
+    if(isinstance(t, dt.date)):
+        return dt.datetime.combine(t.today(), dt.datetime.min.time())
+    return t
 
 def getdatefromnode(n):
     dt = datetime.datetime.min
@@ -1022,7 +1020,7 @@ class WeekView(AgendaBaseView):
     def InsertDay(self, name, date, edit):
         pt = self.view.size()
         row, c = self.view.rowcol(pt)
-        if(date.day == datetime.datetime.now().day):
+        if(date.day == dt.datetime.now().day):
             if(date.day == self.now.day):
                 self.view.insert(edit, self.view.size(),"@" + name + " " + "{0:2}".format(date.day) + "W[")
             else:
@@ -1126,12 +1124,12 @@ class WeekView(AgendaBaseView):
             firstDayIndex = ((wday - 1) + 7) % 7
         else:
             firstDayIndex = sets.GetWeekdayIndexByName(sets.Get("firstDayOfWeek", "Sunday"))
-        wstart = self.now + datetime.timedelta(days=firstDayIndex-wday)
+        wstart = self.now + dt.timedelta(days=firstDayIndex-wday)
         dayNames  = sets.Get("weekViewDayNames",["Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"])
         numDays   = sets.Get("agendaWeekViewNumDays",7)
         for i in range(0,numDays):
             index = (firstDayIndex + i) % len(dayNames)
-            self.InsertDay(dayNames[index], wstart + datetime.timedelta(days=i), edit)
+            self.InsertDay(dayNames[index], wstart + dt.timedelta(days=i), edit)
 
     def FilterEntry(self, n, filename):
         rc = (not self.onlyTasks or (IsTodo(node) or IsDone(n))) and not IsProject(n) and HasTimestamp(n)
@@ -1733,7 +1731,7 @@ class CompositeView(AgendaBaseView):
 
     def UpdateNow(self, now=None):
         if(now == None):
-            self.now = datetime.datetime.now()
+            self.now = dt.datetime.now()
         else:
             self.now = now
         for v in self.agendaViews:
@@ -1796,7 +1794,7 @@ class OrgAgendaGoToCommand(sublime_plugin.TextCommand):
                 # Needs checks on agenda.now to be consistent with
                 # OrgDayPagePreviousCommand and OrgDayPageNextCommand
                 agenda_date = agenda.now.date()
-                current_date = datetime.datetime.now().date()
+                current_date = dt.datetime.now().date()
                 if (agenda_date < current_date and not sets.Get("dayPageCreateOldPages", False)) or \
                    (agenda_date > current_date and not sets.Get("dayPageCreatePagesInFuture", False)):
                     log.warning("Day page does not exist: " +
@@ -2043,7 +2041,7 @@ class OrgAgendaGotoNextDayCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         agenda = FindMappedView(self.view)
         now = agenda.now
-        now = now + datetime.timedelta(days=1)
+        now = now + dt.timedelta(days=1)
         agenda.UpdateNow(now)
         agenda.Clear(edit)
         agenda.DoRenderView(edit)
@@ -2053,7 +2051,7 @@ class OrgAgendaGotoPrevDayCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         agenda = FindMappedView(self.view)
         now = agenda.now
-        now = now + datetime.timedelta(days=-1)
+        now = now + dt.timedelta(days=-1)
         agenda.UpdateNow(now)
         agenda.Clear(edit)
         agenda.DoRenderView(edit)
@@ -2063,7 +2061,7 @@ class OrgAgendaGotoNextWeekCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         agenda = FindMappedView(self.view)
         now = agenda.now
-        now = now + datetime.timedelta(days=7)
+        now = now + dt.timedelta(days=7)
         agenda.UpdateNow(now)
         agenda.Clear(edit)
         agenda.DoRenderView(edit)
@@ -2073,7 +2071,7 @@ class OrgAgendaGotoPrevWeekCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         agenda = FindMappedView(self.view)
         now = agenda.now
-        now = now + datetime.timedelta(days=-7)
+        now = now + dt.timedelta(days=-7)
         agenda.UpdateNow(now)
         agenda.Clear(edit)
         agenda.DoRenderView(edit)
